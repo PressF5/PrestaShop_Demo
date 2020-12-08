@@ -1,0 +1,32 @@
+version: '3'
+services:
+  selenoid:
+    network_mode: bridge
+    image: aerokube/selenoid:latest
+    container_name: "selenoid"
+    volumes:
+      - "[path_to_browsers.json]:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "[path_to_videos]:/opt/selenoid/video"
+    environment:
+      - OVERRIDE_VIDEO_OUTPUT_DIR=[path_to_videos]
+    ports:
+      - "4444:4444"
+    command: ["-conf", "/etc/selenoid/browsers.json", "-video-output-dir", "/opt/selenoid/video", "-video-recorder-image", "selenoid/video-recorder:6.2", "-limit", "20", "-listen", "0.0.0.0:4444"]
+  selenoid-ui:
+    network_mode: bridge
+    image: aerokube/selenoid-ui:latest
+    container_name: "selenoid-ui"
+    ports:
+      - "8100:8100"
+    command: ["-selenoid-uri", "[url_of_selenoid]", "-listen", "0.0.0.0:8100"]
+  test:
+    network_mode: bridge
+    image: bogdan2641/test_prestashop_demo
+    container_name: "test-prestashop"
+    volumes:
+      - "[path_to_videos]:/video/"
+      - "[path_to_allure_report]:/PrestaShop_Demo/target/allure-report/"
+    environment:        
+      - urlGrid=[url_of_selenoid_hub]
+    command: mvn test site -DnumberSuites=[number_of_suites_1_or_2]
