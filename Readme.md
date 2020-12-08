@@ -1,5 +1,5 @@
 # PrestaShop DEMO
-
+![](https://reklama-k.ru/wp-content/uploads/2020/05/cms-prestoshop.png)  
 ### Тесты написанны с использованием следующих технологий:
  - Java
  - TestNG
